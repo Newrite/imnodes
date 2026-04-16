@@ -32,6 +32,24 @@ $ cmake --build build-release -- -j
 
 Note that this has not been tested on Linux and is likely to fail on the platform.
 
+## Building with xmake
+
+This fork also includes an `xmake.lua` so the library can be built and consumed through `xmake`.
+
+Build the library only:
+
+```bash
+xmake f -y
+xmake
+```
+
+Build the SDL2/OpenGL3 examples:
+
+```bash
+xmake f --examples=y -y
+xmake
+```
+
 ## A brief tour
 
 Here is a small overview of how the extension is used. For more information on example usage, scroll to the bottom of the README.
