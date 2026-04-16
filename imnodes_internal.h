@@ -253,6 +253,7 @@ struct ImNodesEditorContext
 
     // ui related fields
     ImVec2 Panning;
+    float  Zoom;
     ImVec2 AutoPanningDelta;
     // Minimum and maximum extents of all content in grid space. Valid after final
     // ImNodes::EndNode() call.
@@ -263,7 +264,7 @@ struct ImNodesEditorContext
 
     // Relative origins of selected nodes for snapping of dragged nodes
     ImVector<ImVec2> SelectedNodeOffsets;
-    // Offset of the primary node origin relative to the mouse cursor.
+    // Offset of the primary node origin in screen space relative to the mouse cursor.
     ImVec2 PrimaryNodeOffset;
 
     ImClickInteractionState ClickInteraction;
@@ -283,7 +284,7 @@ struct ImNodesEditorContext
     float  MiniMapScaling;
 
     ImNodesEditorContext()
-        : Nodes(), Pins(), Links(), Panning(0.f, 0.f), SelectedNodeIndices(), SelectedLinkIndices(),
+        : Nodes(), Pins(), Links(), Panning(0.f, 0.f), Zoom(1.f), SelectedNodeIndices(), SelectedLinkIndices(),
           SelectedNodeOffsets(), PrimaryNodeOffset(0.f, 0.f), ClickInteraction(),
           MiniMapEnabled(false), MiniMapSizeFraction(0.0f), MiniMapNodeHoveringCallback(NULL),
           MiniMapNodeHoveringCallbackUserData(NULL), MiniMapScaling(0.0f)

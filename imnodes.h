@@ -253,6 +253,8 @@ void                  EditorContextFree(ImNodesEditorContext*);
 void                  EditorContextSet(ImNodesEditorContext*);
 ImVec2                EditorContextGetPanning();
 void                  EditorContextResetPanning(const ImVec2& pos);
+float                 EditorContextGetZoom();
+void                  EditorContextResetZoom(float zoom);
 void                  EditorContextMoveToNode(const int node_id);
 // Canvas/view helpers for the current editor context. The origin and size are valid during an
 // active BeginNodeEditor()/EndNodeEditor() frame and continue to reflect the last completed frame
@@ -344,9 +346,10 @@ void SetNodeDraggable(int node_id, const bool draggable);
 // The node's position can be expressed in three coordinate systems:
 // * screen space coordinates, -- the origin is the upper left corner of the window.
 // * editor space coordinates -- the origin is the upper left corner of the node editor window
-// * grid space coordinates, -- the origin is the upper left corner of the node editor window,
-// translated by the current editor panning vector (see EditorContextGetPanning() and
-// EditorContextResetPanning())
+// * grid space coordinates, -- the logical editor canvas before the current view transform is
+// applied. The active view transform is defined by the editor panning vector and zoom level (see
+// EditorContextGetPanning(), EditorContextResetPanning(), EditorContextGetZoom(), and
+// EditorContextResetZoom()).
 
 // Use the following functions to get and set the node's coordinates in these coordinate systems.
 
