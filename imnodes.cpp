@@ -2062,6 +2062,38 @@ void EditorContextMoveToNode(const int node_id)
     editor.Panning.y = -node.Origin.y;
 }
 
+ImVec2 EditorContextGetCanvasOriginScreenSpace()
+{
+    return GImNodes->CanvasOriginScreenSpace;
+}
+
+ImVec2 EditorContextGetCanvasSize()
+{
+    return GImNodes->CanvasRectScreenSpace.GetSize();
+}
+
+ImVec2 EditorContextScreenSpaceToGridSpace(const ImVec2& screen_space_pos)
+{
+    const ImNodesEditorContext& editor = EditorContextGet();
+    return ScreenSpaceToGridSpace(editor, screen_space_pos);
+}
+
+ImVec2 EditorContextGridSpaceToScreenSpace(const ImVec2& grid_space_pos)
+{
+    const ImNodesEditorContext& editor = EditorContextGet();
+    return GridSpaceToScreenSpace(editor, grid_space_pos);
+}
+
+ImVec2 EditorContextScreenSpaceToEditorSpace(const ImVec2& screen_space_pos)
+{
+    return screen_space_pos - GImNodes->CanvasOriginScreenSpace;
+}
+
+ImVec2 EditorContextEditorSpaceToScreenSpace(const ImVec2& editor_space_pos)
+{
+    return EditorSpaceToScreenSpace(editor_space_pos);
+}
+
 void SetImGuiContext(ImGuiContext* ctx) { ImGui::SetCurrentContext(ctx); }
 
 ImNodesIO& GetIO() { return GImNodes->Io; }

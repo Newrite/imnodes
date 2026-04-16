@@ -254,6 +254,15 @@ void                  EditorContextSet(ImNodesEditorContext*);
 ImVec2                EditorContextGetPanning();
 void                  EditorContextResetPanning(const ImVec2& pos);
 void                  EditorContextMoveToNode(const int node_id);
+// Canvas/view helpers for the current editor context. The origin and size are valid during an
+// active BeginNodeEditor()/EndNodeEditor() frame and continue to reflect the last completed frame
+// until the next editor frame begins.
+ImVec2 EditorContextGetCanvasOriginScreenSpace();
+ImVec2 EditorContextGetCanvasSize();
+ImVec2 EditorContextScreenSpaceToGridSpace(const ImVec2& screen_space_pos);
+ImVec2 EditorContextGridSpaceToScreenSpace(const ImVec2& grid_space_pos);
+ImVec2 EditorContextScreenSpaceToEditorSpace(const ImVec2& screen_space_pos);
+ImVec2 EditorContextEditorSpaceToScreenSpace(const ImVec2& editor_space_pos);
 
 ImNodesIO& GetIO();
 
