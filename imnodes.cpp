@@ -1212,6 +1212,9 @@ ImOptionalIndex ResolveHoveredPin(
     ImOptionalIndex pin_idx_with_smallest_distance;
 
     const float hover_radius_sqr = GImNodes->Style.PinHoverRadius * GImNodes->Style.PinHoverRadius;
+    const float side_hover_extent = ImMax(GImNodes->Style.PinHoverRadius * 1.75f, 14.0f);
+    const float side_hover_padding = ImMax(GImNodes->Style.PinHoverRadius * 0.35f, 2.0f);
+    const float vertical_hover_padding = ImMax(GImNodes->Style.PinHoverRadius * 0.50f, 4.0f);
 
     for (int idx = 0; idx < pins.Pool.Size; ++idx)
     {
@@ -1227,12 +1230,30 @@ ImOptionalIndex ResolveHoveredPin(
 
         const ImVec2& pin_pos = pins.Pool[idx].Pos;
         const float   distance_sqr = ImLengthSqr(pin_pos - GImNodes->MousePos);
+        // Treat the socket edge as a small interaction strip instead of a single point sample.
+        // This keeps occupied left/right pins draggable even when the connected link passes close
+        // to the pin center.
+        ImRect        hover_rect = pins.Pool[idx].AttributeRect;
+        hover_rect.Min.y -= vertical_hover_padding;
+        hover_rect.Max.y += vertical_hover_padding;
+
+        if (pins.Pool[idx].Type == ImNodesAttributeType_Input)
+        {
+            hover_rect.Min.x = pin_pos.x - side_hover_padding;
+            hover_rect.Max.x = pin_pos.x + side_hover_extent;
+        }
+        else
+        {
+            hover_rect.Min.x = pin_pos.x - side_hover_extent;
+            hover_rect.Max.x = pin_pos.x + side_hover_padding;
+        }
 
         // TODO: GImNodes->Style.PinHoverRadius needs to be copied into pin data and the pin-local
         // value used here. This is no longer called in BeginAttribute/EndAttribute scope and the
         // detected pin might have a different hover radius than what the user had when calling
         // BeginAttribute/EndAttribute.
-        if (distance_sqr < hover_radius_sqr && distance_sqr < smallest_distance)
+        if ((distance_sqr < hover_radius_sqr || hover_rect.Contains(GImNodes->MousePos)) &&
+            distance_sqr < smallest_distance)
         {
             smallest_distance = distance_sqr;
             pin_idx_with_smallest_distance = idx;
