@@ -2513,14 +2513,24 @@ void EndNodeEditor()
 
     if (!IsMiniMapHovered())
     {
-        if (GImNodes->LeftMouseClicked && GImNodes->HoveredLinkIdx.HasValue())
-        {
-            BeginLinkInteraction(editor, GImNodes->HoveredLinkIdx.Value(), GImNodes->HoveredPinIdx);
-        }
+        const bool link_detach_modifier_pressed =
+            GImNodes->Io.LinkDetachWithModifierClick.Modifier != NULL &&
+            *GImNodes->Io.LinkDetachWithModifierClick.Modifier;
+        const bool hovered_pin_allows_drag_detach =
+            GImNodes->HoveredPinIdx.HasValue() &&
+            (editor.Pins.Pool[GImNodes->HoveredPinIdx.Value()].Flags &
+             ImNodesAttributeFlags_EnableLinkDetachWithDragClick);
 
-        else if (GImNodes->LeftMouseClicked && GImNodes->HoveredPinIdx.HasValue())
+        if (GImNodes->LeftMouseClicked && GImNodes->HoveredPinIdx.HasValue() &&
+            (!GImNodes->HoveredLinkIdx.HasValue() ||
+             (!hovered_pin_allows_drag_detach && !link_detach_modifier_pressed)))
         {
             BeginLinkCreation(editor, GImNodes->HoveredPinIdx.Value());
+        }
+
+        else if (GImNodes->LeftMouseClicked && GImNodes->HoveredLinkIdx.HasValue())
+        {
+            BeginLinkInteraction(editor, GImNodes->HoveredLinkIdx.Value(), GImNodes->HoveredPinIdx);
         }
 
         else if (GImNodes->LeftMouseClicked && GImNodes->HoveredNodeIdx.HasValue())
