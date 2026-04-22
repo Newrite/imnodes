@@ -432,6 +432,10 @@ bool IsLinkCreated(
 // Was an existing link detached from a pin by the user? The detached link's id is assigned to the
 // output argument link_id.
 bool IsLinkDestroyed(int* link_id);
+// Extended form of IsLinkDestroyed which also reports the attribute id of the pin the user
+// detached the link from. This is useful for editors that distinguish "drag from this occupied
+// input" from "drag the link's remaining output" when opening drop-context menus.
+bool IsLinkDestroyed(int* link_id, int* detached_at_attribute_id);
 
 // Use the following functions to write the editor context's state to a string, or directly to a
 // file. The editor context is serialized in the INI file format.

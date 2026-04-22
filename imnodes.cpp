@@ -662,6 +662,7 @@ void BeginLinkDetach(ImNodesEditorContext& editor, const int link_idx, const int
     state.LinkCreation.StartPinIdx =
         detach_pin_idx == link.StartPinIdx ? link.EndPinIdx : link.StartPinIdx;
     GImNodes->DeletedLinkIdx = link_idx;
+    GImNodes->DetachedLinkPinIdx = detach_pin_idx;
 }
 
 void BeginLinkCreation(ImNodesEditorContext& editor, const int hovered_pin_idx)
@@ -2366,6 +2367,7 @@ void BeginNodeEditor()
     GImNodes->HoveredLinkIdx.Reset();
     GImNodes->HoveredPinIdx.Reset();
     GImNodes->DeletedLinkIdx.Reset();
+    GImNodes->DetachedLinkPinIdx.Reset();
     GImNodes->SnapLinkIdx.Reset();
 
     GImNodes->NodeIndicesOverlappingWithMouse.clear();
@@ -3241,6 +3243,27 @@ bool IsLinkDestroyed(int* const link_id)
         const ImNodesEditorContext& editor = EditorContextGet();
         const int                   link_idx = GImNodes->DeletedLinkIdx.Value();
         *link_id = editor.Links.Pool[link_idx].Id;
+    }
+
+    return link_destroyed;
+}
+
+bool IsLinkDestroyed(int* const link_id, int* const detached_at_attribute_id)
+{
+    IM_ASSERT(GImNodes->CurrentScope == ImNodesScope_None);
+
+    const bool link_destroyed = GImNodes->DeletedLinkIdx.HasValue();
+    if (link_destroyed)
+    {
+        const ImNodesEditorContext& editor = EditorContextGet();
+        const int                   link_idx = GImNodes->DeletedLinkIdx.Value();
+        *link_id = editor.Links.Pool[link_idx].Id;
+
+        if (detached_at_attribute_id != NULL && GImNodes->DetachedLinkPinIdx.HasValue())
+        {
+            const int pin_idx = GImNodes->DetachedLinkPinIdx.Value();
+            *detached_at_attribute_id = editor.Pins.Pool[pin_idx].Id;
+        }
     }
 
     return link_destroyed;

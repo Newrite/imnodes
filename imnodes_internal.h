@@ -331,6 +331,7 @@ struct ImNodesContext
     ImOptionalIndex HoveredPinIdx;
 
     ImOptionalIndex DeletedLinkIdx;
+    ImOptionalIndex DetachedLinkPinIdx;
     ImOptionalIndex SnapLinkIdx;
 
     // Event helper state
